@@ -1,3 +1,4 @@
+// stores cards available for memory game
 let cards = [
 {
 	rank: 'queen',
@@ -19,26 +20,53 @@ let cards = [
 	suit: 'diamonds',
 	cardImage: 'images/king-of-diamonds.png'
 }
-
 ];
+// stores flipped cards
 let cardsInPlay = [];
 
-function checkForMatch() {
+/*
+if two cards have been flipped
+checks for match, alerts to success/failure
+*/
+function checkForMatch () {
+	alert((cardsInPlay[0] === cardsInPlay[1]) ? 
+		'You found a match!' : 
+		'Sorry, try again.');
+}
+
+/*
+retrieves the card id from the element that was clicked
+adds the card to cardsInPlay
+changes the imagesrc of the element
+calls checkForMatch()
+*/
+function flipCard () {
+	let cardId = this.getAttribute('data-id');
+	cardsInPlay.push(cards[cardId].rank);
+	this.setAttribute('src', cards[cardId].cardImage);
 	if (cardsInPlay.length === 2) {
-		alert((cardsInPlay[0] === cardsInPlay[1]) ? 
-			'You found a match!' : 
-			'Sorry, try again.');
+		checkForMatch();
 	}
 }
 
-function flipCard(cardId) {
-	cardsInPlay.push(cards[cardId].rank);
-
-	console.log(cards[cardId].cardImage);
-	console.log('User flipped ' + cards[cardId].rank + ' of ' + cards[cardId].suit);
-
-	checkForMatch();
+/*
+appends 4 imgs with sequential IDs
+to the div with id='game-board'
+each img listens for click, which calls flipCard()
+*/
+function createBoard () {
+	for (let i = 0; i < cards.length; i++) {
+		var cardElement = document.createElement('img');
+		cardElement.setAttribute('src', 'images/back.png');
+		cardElement.setAttribute('data-id', i);
+		cardElement.addEventListener('click', flipCard);
+		document.getElementById('game-board').appendChild(cardElement);
+	}
 }
 
-flipCard(0);
-flipCard(2);
+// instantiate gameboard
+createBoard();
+
+// noticed error where you can click the card twice to win
+// implement reset button
+//implement randomization
